@@ -1,0 +1,82 @@
+#include <stdio.h>
+
+#define SIZE 8
+
+void printBoard(char board[SIZE][SIZE]) {
+    printf("  0 1 2 3 4 5 6 7\n");
+    for (int i = 0; i < SIZE; i++) {
+        printf("%d ", i);
+        for (int j = 0; j < SIZE; j++) {
+            printf("%c ", board[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int isMoveValid(char board[SIZE][SIZE], int fromRow, int fromCol, int toRow, int toCol, char currentPlayer) {
+    // Verifica se o movimento é válido
+    if (toRow < 0 || toRow >= SIZE || toCol < 0 || toCol >= SIZE) {
+        return 0; // Movimento fora do tabuleiro
+    }
+
+    if (board[toRow][toCol] != ' ') {
+        return 0; // A posição de destino já está ocupada
+    }
+
+    // Lógica para verificar movimentos válidos específicos do jogo de damas
+    // ...
+
+    return 1; // Movimento válido
+}
+
+void makeMove(char board[SIZE][SIZE], int fromRow, int fromCol, int toRow, int toCol, char currentPlayer) {
+    // Realiza o movimento no tabuleiro
+    board[toRow][toCol] = board[fromRow][fromCol];
+    board[fromRow][fromCol] = ' ';
+}
+
+int main() {
+    char board[SIZE][SIZE];
+
+    // Inicializa o tabuleiro
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if ((i + j) % 2 == 0) {
+                board[i][j] = ' '; // Espaços vazios
+            } else {
+                if (i < 3) {
+                    board[i][j] = 'X'; // Peças do jogador 1
+                } else if (i > SIZE - 4) {
+                    board[i][j] = 'O'; // Peças do jogador 2
+                } else {
+                    board[i][j] = ' '; // Espaços vazios no meio
+                }
+            }
+        }
+    }
+
+    int currentPlayer = 1; // 1 para jogador 1, 2 para jogador 2
+    int fromRow, fromCol, toRow, toCol;
+
+    while (1) {
+        // Mostra o tabuleiro
+        printBoard(board);
+
+        // Solicita o movimento do jogador
+        printf("Jogador %d, informe o movimento (linha de origem, coluna de origem, linha de destino, coluna de destino): ", currentPlayer);
+        scanf("%d %d %d %d", &fromRow, &fromCol, &toRow, &toCol);
+
+        // Verifica se o movimento é válido
+        if (isMoveValid(board, fromRow, fromCol, toRow, toCol, currentPlayer == 1 ? 'X' : 'O')) {
+            // Realiza o movimento
+            makeMove(board, fromRow, fromCol, toRow, toCol, currentPlayer == 1 ? 'X' : 'O');
+
+            // Troca de jogador
+            currentPlayer = (currentPlayer == 1) ? 2 : 1;
+        } else {
+            printf("Movimento inválido. Tente novamente.\n");
+        }
+    }
+
+    return 0;
+}
